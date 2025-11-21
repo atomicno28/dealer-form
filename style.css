@@ -13,7 +13,6 @@ body {
   transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* CONTAINER */
 .container {
   max-width: 90vw;
   margin: auto;
@@ -21,7 +20,6 @@ body {
   background: #ffffff;
   border-radius: 2vh;
   box-shadow: 0 0 3vw rgba(0, 0, 0, 0.08);
-  transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 h2 {
@@ -37,7 +35,6 @@ label {
   display: block;
 }
 
-/* INPUTS */
 input,
 textarea {
   width: 100%;
@@ -47,15 +44,12 @@ textarea {
   margin-bottom: 3vh;
   font-size: 2vh;
   background: #fafafa;
-  color: #111;
-  transition: background 0.3s ease, border 0.3s ease, color 0.3s ease;
 }
 
 textarea {
   height: 18vh;
 }
 
-/* LAYOUT */
 .form-row {
   display: flex;
   gap: 4vw;
@@ -68,7 +62,6 @@ textarea {
   min-width: 40vw;
 }
 
-/* DROP ZONE */
 .drop-zone {
   width: 100%;
   height: 20vh;
@@ -83,30 +76,26 @@ textarea {
   background: #f3f6fa;
   cursor: pointer;
   color: #222;
-  transition: background 0.3s ease, border 0.3s ease, color 0.3s ease;
 }
 
-/* IMAGE GRID */
 .image-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(20vw, 1fr));
   gap: 2vh;
 }
 
-.image-grid .img-box {
+.img-box {
   position: relative;
 }
 
-.image-grid img {
+.img-box img {
   width: 100%;
   height: 20vh;
   object-fit: cover;
   border-radius: 1.5vh;
   border: 0.4vh solid #333;
-  transition: border 0.3s ease;
 }
 
-/* REMOVE BUTTON */
 .remove-btn {
   position: absolute;
   top: 1vh;
@@ -117,14 +106,8 @@ textarea {
   font-size: 1.5vh;
   border-radius: 50%;
   cursor: pointer;
-  transition: background 0.2s ease;
 }
 
-.remove-btn:hover {
-  background: #c52733;
-}
-
-/* BUTTONS */
 .button-row {
   display: flex;
   gap: 2vw;
@@ -139,16 +122,22 @@ button {
   cursor: pointer;
   font-size: 2.2vh;
   font-weight: 600;
-  transition: background 0.25s ease;
 }
 
 .upload-btn {
   background: #007bff;
   color: white;
 }
-
 .upload-btn:hover {
   background: #005fcc;
+}
+
+.camera-btn {
+  background: #00a86b;
+  color: white;
+}
+.camera-btn:hover {
+  background: #008e58;
 }
 
 .pdf-btn {
@@ -156,30 +145,25 @@ button {
   color: white;
   flex: 1;
 }
-
 .pdf-btn:hover {
   background: #004fcc;
 }
 
-/* ERROR MESSAGE */
 .error-msg {
-  margin-top: 1vh;
   color: red;
   text-align: center;
   font-size: 2vh;
 }
 
-/* FOOTER */
 .footer {
   text-align: center;
   margin-top: 4vh;
   font-size: 2vh;
-  color: #444;
 }
 
-/*************************************************
-   🌙 DARK MODE — AUTO BASED ON SYSTEM THEME
-**************************************************/
+/*****************************************
+  AUTO DARK MODE
+******************************************/
 @media (prefers-color-scheme: dark) {
   body {
     background: #0f0f0f;
@@ -198,42 +182,27 @@ button {
     border: 0.15vh solid #555;
   }
 
-  label {
-    color: #e8e8e8;
-  }
-
   .drop-zone {
     background: #1f1f1f;
-    border: 0.3vh dashed #777;
+    border-color: #777;
     color: #ccc;
   }
 
-  .image-grid img {
-    border: 0.4vh solid #666;
-  }
-
-  .remove-btn {
-    background: #bb2222;
-  }
-  .remove-btn:hover {
-    background: #991414;
+  .img-box img {
+    border-color: #666;
   }
 
   .upload-btn {
     background: #005fcc;
   }
-  .upload-btn:hover {
-    background: #0046a3;
+  .camera-btn {
+    background: #008e58;
   }
-
   .pdf-btn {
     background: #0044bb;
   }
-  .pdf-btn:hover {
-    background: #003699;
-  }
 
   .footer {
-    color: #d0d0d0;
+    color: #ccc;
   }
 }
