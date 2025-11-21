@@ -27,7 +27,7 @@
           <label>Uploaded Images:</label>
 
           <div id="dropZone" class="drop-zone">
-            Tap to upload or drag & drop images
+            Tap here for Gallery or drag & drop
           </div>
 
           <div id="imageList" class="image-grid"></div>
@@ -42,13 +42,21 @@
 
       <p id="errorMsg" class="error-msg"></p>
 
-      <!-- File Input -->
-      <input
-        id="imageInput"
+      <!-- GALLERY INPUT -->
+      <input 
+        id="galleryInput"
+        type="file"
+        accept="image/*"
+        multiple
+        hidden
+      />
+
+      <!-- CAMERA INPUT -->
+      <input 
+        id="cameraInput"
         type="file"
         accept="image/*"
         capture="environment"
-        multiple
         hidden
       />
 
