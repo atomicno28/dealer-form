@@ -206,3 +206,9 @@ button {
     color: #ccc;
   }
 }
+
+@media (max-width: 768px) {
+  .upload-btn {
+    display: none !important;
+  }
+}
