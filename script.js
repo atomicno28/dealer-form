@@ -1,6 +1,9 @@
 const addImageBtn = document.getElementById("addImageBtn");
 const cameraBtn = document.getElementById("cameraBtn");
-const imageInput = document.getElementById("imageInput");
+
+const galleryInput = document.getElementById("galleryInput");
+const cameraInput = document.getElementById("cameraInput");
+
 const imageList = document.getElementById("imageList");
 const dropZone = document.getElementById("dropZone");
 const generatePdfBtn = document.getElementById("generatePdfBtn");
@@ -9,7 +12,7 @@ const errorMsg = document.getElementById("errorMsg");
 let images = [];
 
 /************************************
- * IMAGE COMPRESSION FUNCTION
+ * IMAGE COMPRESSION
  ************************************/
 async function compressImage(base64, maxWidth = 800, quality = 0.7) {
   return new Promise((resolve) => {
@@ -18,10 +21,8 @@ async function compressImage(base64, maxWidth = 800, quality = 0.7) {
 
     img.onload = () => {
       const canvas = document.createElement("canvas");
-      let width = img.width;
-      let height = img.height;
+      let { width, height } = img;
 
-      // Maintain ratio
       if (width > maxWidth) {
         height = (maxWidth / width) * height;
         width = maxWidth;
@@ -30,48 +31,34 @@ async function compressImage(base64, maxWidth = 800, quality = 0.7) {
       canvas.width = width;
       canvas.height = height;
 
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(img, 0, 0, width, height);
+      canvas.getContext("2d").drawImage(img, 0, 0, width, height);
 
-      const compressed = canvas.toDataURL("image/jpeg", quality);
-      resolve(compressed);
+      resolve(canvas.toDataURL("image/jpeg", quality));
     };
   });
 }
 
 /************************************
- * CAMERA BUTTON — DIRECT CAMERA OPEN
+ * CAMERA
  ************************************/
-cameraBtn.onclick = () => {
-  const camInput = document.createElement("input");
-  camInput.type = "file";
-  camInput.accept = "image/*";
-  camInput.capture = "environment";
-
-  camInput.onchange = (e) => handleFiles(e.target.files);
-  camInput.click();
-};
+cameraBtn.onclick = () => cameraInput.click();
 
 /************************************
- * IMAGE UPLOAD (CLICK + DRAG DROP)
+ * GALLERY
  ************************************/
-addImageBtn.onclick = () => imageInput.click();
-dropZone.onclick = () => imageInput.click();
+addImageBtn.onclick = () => galleryInput.click();
+dropZone.onclick = () => galleryInput.click();
 
-imageInput.onchange = (e) => handleFiles(e.target.files);
+galleryInput.onchange = (e) => handleFiles(e.target.files);
+cameraInput.onchange = (e) => handleFiles(e.target.files);
 
-dropZone.ondragover = (e) => {
-  e.preventDefault();
-  dropZone.style.background = "#d0e6ff";
-};
-
-dropZone.ondragleave = () => {
-  dropZone.style.background = "";
-};
+/************************************
+ * DRAG DROP
+ ************************************/
+dropZone.ondragover = (e) => e.preventDefault();
 
 dropZone.ondrop = (e) => {
   e.preventDefault();
-  dropZone.style.background = "";
   handleFiles(e.dataTransfer.files);
 };
 
@@ -81,41 +68,39 @@ dropZone.ondrop = (e) => {
 function handleFiles(files) {
   [...files].forEach((file) => {
     const reader = new FileReader();
-    reader.onload = (event) => {
-      compressImage(event.target.result).then((compressed) => {
-        images.push(compressed);
-        renderImages();
-      });
+    reader.onload = async (event) => {
+      const compressed = await compressImage(event.target.result);
+      images.push(compressed);
+      renderImages();
     };
     reader.readAsDataURL(file);
   });
 }
 
 /************************************
- * RENDER IMAGES WITH DELETE BUTTON
+ * RENDER IMAGES
  ************************************/
 function renderImages() {
   imageList.innerHTML = "";
 
   images.forEach((src, index) => {
-    const wrapper = document.createElement("div");
-    wrapper.className = "img-box";
+    const box = document.createElement("div");
+    box.className = "img-box";
 
     const img = document.createElement("img");
     img.src = src;
 
-    const removeBtn = document.createElement("div");
-    removeBtn.className = "remove-btn";
-    removeBtn.textContent = "×";
-
-    removeBtn.onclick = () => {
+    const del = document.createElement("div");
+    del.className = "remove-btn";
+    del.textContent = "×";
+    del.onclick = () => {
       images.splice(index, 1);
       renderImages();
     };
 
-    wrapper.appendChild(img);
-    wrapper.appendChild(removeBtn);
-    imageList.appendChild(wrapper);
+    box.appendChild(img);
+    box.appendChild(del);
+    imageList.appendChild(box);
   });
 }
 
@@ -141,28 +126,28 @@ function validate() {
 }
 
 /************************************
- * PDF FILE NAME FORMAT
+ * FILE NAME
  ************************************/
 function getPdfFileName() {
-  const parts = partsName.value.trim() || "Report";
+  const parts = partsName.value.trim();
   const now = new Date();
 
-  let day = String(now.getDate()).padStart(2, "0");
-  let month = String(now.getMonth() + 1).padStart(2, "0");
-  let year = now.getFullYear();
+  const day = String(now.getDate()).padStart(2, "0");
+  const mon = String(now.getMonth() + 1).padStart(2, "0");
+  const yr = now.getFullYear();
 
-  let hours = now.getHours();
-  let minutes = String(now.getMinutes()).padStart(2, "0");
+  let hr = now.getHours();
+  let min = String(now.getMinutes()).padStart(2, "0");
 
-  let ampm = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12 || 12;
-  hours = String(hours).padStart(2, "0");
+  const ampm = hr >= 12 ? "PM" : "AM";
+  hr = hr % 12 || 12;
+  hr = String(hr).padStart(2, "0");
 
-  return `${parts}_${day}_${month}_${year}_${hours}_${minutes}_${ampm}.pdf`;
+  return `${parts}_${day}_${mon}_${yr}_${hr}_${min}_${ampm}.pdf`;
 }
 
 /************************************
- * EXPORT PDF — Option-B Alignment + Compressed Images
+ * PDF EXPORT (OPTION B)
  ************************************/
 generatePdfBtn.onclick = async () => {
   if (!validate()) return;
@@ -170,18 +155,16 @@ generatePdfBtn.onclick = async () => {
   const { jsPDF } = window.jspdf;
   const pdf = new jsPDF("p", "mm", "a4");
 
-  // Title
   pdf.setFont("Helvetica", "bold");
   pdf.setFontSize(18);
   pdf.text("Dealer Report", 75, 15);
 
-  // Timestamp
   pdf.setFontSize(12);
   pdf.text("Exported On:", 10, 28);
   pdf.setFont("Helvetica", "normal");
   pdf.text(new Date().toLocaleString("en-GB"), 40, 28);
 
-  // Option-B alignment
+  // Option B Alignment
   pdf.setFont("Helvetica", "bold");
   pdf.text("Dealer:", 10, 40);
   pdf.setFont("Helvetica", "normal");
@@ -196,13 +179,12 @@ generatePdfBtn.onclick = async () => {
   pdf.text("Desc:", 10, 60);
 
   const descLines = pdf.splitTextToSize(description.value.trim(), 160);
+  pdf.setFont("Helvetica", "normal");
   pdf.text(descLines, 40, 60);
 
   let y = 60 + descLines.length * 6 + 10;
 
-  /************************************
-   * ADD COMPRESSED IMAGES TO PDF (2 per row)
-   ************************************/
+  // Images (2 per row)
   let col = 0;
 
   for (let i = 0; i < images.length; i++) {
@@ -215,11 +197,10 @@ generatePdfBtn.onclick = async () => {
     pdf.addImage(images[i], "JPEG", x, y, 90, 70);
 
     if (col === 1) y += 80;
-
     col = 1 - col;
   }
 
-  pdf.text("Created by Nikhil Patel", 75, 290);
+  pdf.text("Made with ❤️ by Nikhil Patel", 75, 290);
 
   pdf.save(getPdfFileName());
 };
