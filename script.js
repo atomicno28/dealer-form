@@ -2,7 +2,6 @@ const addImageBtn = document.getElementById("addImageBtn");
 const imageInput = document.getElementById("imageInput");
 const imageList = document.getElementById("imageList");
 const dropZone = document.getElementById("dropZone");
-const excelBtn = document.getElementById("excelBtn");
 const generatePdfBtn = document.getElementById("generatePdfBtn");
 const errorMsg = document.getElementById("errorMsg");
 
@@ -120,26 +119,6 @@ function getPdfFileName() {
 }
 
 /************************************
- * EXCEL EXPORT
- ************************************/
-excelBtn.onclick = () => {
-  if (!validate()) return;
-
-  const data = images.map((img, i) => ({
-    Dealer: dealerName.value,
-    Parts: partsName.value,
-    Description: description.value,
-    Image_Number: i + 1,
-  }));
-
-  const ws = XLSX.utils.json_to_sheet(data);
-  const wb = XLSX.utils.book_new();
-
-  XLSX.utils.book_append_sheet(wb, ws, "Report");
-  XLSX.writeFile(wb, `${partsName.value}_Report.xlsx`);
-};
-
-/************************************
  * PDF EXPORT (Option-B Alignment)
  ************************************/
 generatePdfBtn.onclick = async () => {
@@ -212,3 +191,4 @@ generatePdfBtn.onclick = async () => {
   // SAVE WITH FORMATTED NAME
   pdf.save(getPdfFileName());
 };
+
