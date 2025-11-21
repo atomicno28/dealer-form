@@ -10,16 +10,16 @@ body {
   padding: 4vh;
   background: #eef2f7;
   color: #111;
-  transition: background 0.3s ease, color 0.3s ease;
+  transition: 0.3s ease;
 }
 
 .container {
   max-width: 90vw;
   margin: auto;
   padding: 4vh;
-  background: #ffffff;
+  background: #fff;
   border-radius: 2vh;
-  box-shadow: 0 0 3vw rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 3vw rgba(0, 0, 0, 0.1);
 }
 
 h2 {
@@ -161,13 +161,13 @@ button {
   font-size: 2vh;
 }
 
-/*****************************************
+/********************
   AUTO DARK MODE
-******************************************/
+********************/
 @media (prefers-color-scheme: dark) {
   body {
     background: #0f0f0f;
-    color: #f0f0f0;
+    color: #fff;
   }
 
   .container {
@@ -178,7 +178,7 @@ button {
   input,
   textarea {
     background: #222;
-    color: #ffffff;
+    color: #fff;
     border: 0.15vh solid #555;
   }
 
@@ -201,12 +201,11 @@ button {
   .pdf-btn {
     background: #0044bb;
   }
-
-  .footer {
-    color: #ccc;
-  }
 }
 
+/***********************
+ HIDE Upload on Mobile
+***********************/
 @media (max-width: 768px) {
   .upload-btn {
     display: none !important;
