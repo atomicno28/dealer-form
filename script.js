@@ -1,4 +1,5 @@
 const addImageBtn = document.getElementById("addImageBtn");
+const cameraBtn = document.getElementById("cameraBtn");
 const imageInput = document.getElementById("imageInput");
 const imageList = document.getElementById("imageList");
 const dropZone = document.getElementById("dropZone");
@@ -8,7 +9,20 @@ const errorMsg = document.getElementById("errorMsg");
 let images = [];
 
 /************************************
- * IMAGE UPLOAD (CLICK + DRAG-DROP)
+ * CAMERA BUTTON — DIRECT CAMERA OPEN
+ ************************************/
+cameraBtn.onclick = () => {
+  const camInput = document.createElement("input");
+  camInput.type = "file";
+  camInput.accept = "image/*";
+  camInput.capture = "environment";
+
+  camInput.onchange = (e) => handleFiles(e.target.files);
+  camInput.click();
+};
+
+/************************************
+ * IMAGE UPLOAD (CLICK + DRAG DROP)
  ************************************/
 addImageBtn.onclick = () => imageInput.click();
 dropZone.onclick = () => imageInput.click();
@@ -67,37 +81,28 @@ function renderImages() {
 }
 
 /************************************
- * VALIDATION — TRUE/FALSE ONLY
+ * VALIDATION
  ************************************/
 function validate() {
   errorMsg.textContent = "";
 
-  if (!dealerName.value.trim()) {
-    errorMsg.textContent = "Please add dealer name";
-    return false;
-  }
+  if (!dealerName.value.trim())
+    return (errorMsg.textContent = "Please add dealer name"), false;
 
-  if (!partsName.value.trim()) {
-    errorMsg.textContent = "Please add parts name";
-    return false;
-  }
+  if (!partsName.value.trim())
+    return (errorMsg.textContent = "Please add parts name"), false;
 
-  if (!description.value.trim()) {
-    errorMsg.textContent = "Please add description";
-    return false;
-  }
+  if (!description.value.trim())
+    return (errorMsg.textContent = "Please add description"), false;
 
-  if (images.length === 0) {
-    errorMsg.textContent = "Please upload at least 1 image";
-    return false;
-  }
+  if (images.length === 0)
+    return (errorMsg.textContent = "Please upload at least 1 image"), false;
 
   return true;
 }
 
 /************************************
- * PDF FILENAME FORMAT
- * PartsName_DD_MM_YYYY_HH_MM_AM.pdf
+ * PDF FILE NAME
  ************************************/
 function getPdfFileName() {
   const parts = partsName.value.trim() || "Report";
@@ -111,15 +116,14 @@ function getPdfFileName() {
   let minutes = String(now.getMinutes()).padStart(2, "0");
 
   let ampm = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12;
-  hours = hours ? hours : 12;
+  hours = hours % 12 || 12;
   hours = String(hours).padStart(2, "0");
 
   return `${parts}_${day}_${month}_${year}_${hours}_${minutes}_${ampm}.pdf`;
 }
 
 /************************************
- * PDF EXPORT (Option-B Alignment)
+ * EXPORT PDF
  ************************************/
 generatePdfBtn.onclick = async () => {
   if (!validate()) return;
@@ -138,9 +142,7 @@ generatePdfBtn.onclick = async () => {
   pdf.setFont("Helvetica", "normal");
   pdf.text(new Date().toLocaleString("en-GB"), 40, 28);
 
-  /***********************
-   * OPTION-B ALIGNMENT
-   ***********************/
+  // Option B alignment
   pdf.setFont("Helvetica", "bold");
   pdf.text("Dealer:", 10, 40);
   pdf.setFont("Helvetica", "normal");
@@ -154,20 +156,12 @@ generatePdfBtn.onclick = async () => {
   pdf.setFont("Helvetica", "bold");
   pdf.text("Desc:", 10, 60);
 
-  pdf.setFont("Helvetica", "normal");
-  const descX = 40;
-  const descY = 60;
+  const descLines = pdf.splitTextToSize(description.value.trim(), 160);
+  pdf.text(descLines, 40, 60);
 
-  let descValue = description.value.trim();
-  let descLines = pdf.splitTextToSize(descValue, 160);
+  let y = 60 + descLines.length * 6 + 10;
 
-  pdf.text(descLines, descX, descY);
-
-  let y = descY + descLines.length * 6 + 10;
-
-  /************************************
-   * IMAGES 2 PER ROW
-   ************************************/
+  // Images 2 per row
   let col = 0;
 
   for (let i = 0; i < images.length; i++) {
@@ -177,18 +171,13 @@ generatePdfBtn.onclick = async () => {
     }
 
     const x = col === 0 ? 10 : 110;
-
     pdf.addImage(images[i], "JPEG", x, y, 90, 70);
 
     if (col === 1) y += 80;
-
     col = 1 - col;
   }
 
-  // Footer
-  pdf.text("Made with Love by Nikhil Patel", 75, 290);
+  pdf.text("Created by Nikhil Patel", 75, 290);
 
-  // SAVE WITH FORMATTED NAME
   pdf.save(getPdfFileName());
 };
-
