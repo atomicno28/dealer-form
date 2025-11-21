@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dealer Form</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>Dealer Form</h2>
+
+      <div class="form-row">
+        <div class="left">
+          <label>Name of Dealer:</label>
+          <input id="dealerName" placeholder="Enter dealer name" />
+
+          <label>Parts Name:</label>
+          <input id="partsName" placeholder="Enter parts name" />
+
+          <label>Description:</label>
+          <textarea id="description" placeholder="Enter description"></textarea>
+        </div>
+
+        <div class="right">
+          <label>Uploaded Images:</label>
+
+          <div id="dropZone" class="drop-zone">
+            Drag & Drop images here or click upload
+          </div>
+
+          <div id="imageList" class="image-grid"></div>
+        </div>
+      </div>
+
+      <div class="button-row">
+        <button id="addImageBtn" class="upload-btn">Upload Images</button>
+        <!-- <button id="excelBtn" class="excel-btn">Export Excel</button> -->
+        <button id="generatePdfBtn" class="pdf-btn">Export PDF</button>
+      </div>
+
+      <p id="errorMsg" class="error-msg"></p>
+
+      <input id="imageInput" type="file" accept="image/*" multiple hidden />
+
+      <div class="footer">Made with ❤️ by Nikhil Patel</div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

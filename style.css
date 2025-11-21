@@ -1,0 +1,167 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  padding: 4vh;
+  background: #eef2f7;
+  transition: background 0.3s, color 0.3s;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #121212;
+    color: #ffffff;
+  }
+  .container {
+    background: #1e1e1e;
+  }
+  input,
+  textarea {
+    background: #222;
+    color: #fff;
+    border: 0.1vh solid #444;
+  }
+  .drop-zone {
+    border: 0.3vh dashed #888;
+  }
+}
+
+.container {
+  max-width: 90vw;
+  margin: auto;
+  padding: 4vh;
+  background: white;
+  border-radius: 2vh;
+  box-shadow: 0 0 3vw rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 4vh;
+  font-size: 4vh;
+}
+
+label {
+  font-size: 2.2vh;
+  font-weight: 600;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 2vh;
+  border-radius: 1.5vh;
+  border: 0.2vh solid #ccc;
+  margin-bottom: 3vh;
+  font-size: 2vh;
+}
+
+textarea {
+  height: 18vh;
+}
+
+.form-row {
+  display: flex;
+  gap: 4vw;
+  flex-wrap: wrap;
+}
+
+.left,
+.right {
+  flex: 1;
+  min-width: 40vw;
+}
+
+.drop-zone {
+  width: 100%;
+  height: 20vh;
+  border: 0.4vh dashed #007bff;
+  border-radius: 1.5vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2vh;
+  margin-bottom: 3vh;
+  text-align: center;
+  background: #f3f6fa;
+  cursor: pointer;
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20vw, 1fr));
+  gap: 2vh;
+}
+
+.image-grid .img-box {
+  position: relative;
+}
+
+.image-grid img {
+  width: 100%;
+  height: 20vh;
+  object-fit: cover;
+  border-radius: 1.5vh;
+  border: 0.4vh solid #333;
+}
+
+.remove-btn {
+  position: absolute;
+  top: 1vh;
+  right: 1vh;
+  background: red;
+  color: white;
+  padding: 1vh 1.2vh;
+  font-size: 1.5vh;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.button-row {
+  display: flex;
+  gap: 2vw;
+  margin-top: 3vh;
+  flex-wrap: wrap;
+}
+
+button {
+  padding: 2vh 4vw;
+  border-radius: 1.5vh;
+  border: none;
+  cursor: pointer;
+  font-size: 2.2vh;
+  font-weight: 600;
+}
+
+.upload-btn {
+  background: #007bff;
+  color: white;
+}
+
+.pdf-btn {
+  background: #0066ff;
+  color: white;
+  flex: 1;
+}
+
+.excel-btn {
+  background: #11a011;
+  color: white;
+}
+
+.error-msg {
+  margin-top: 1vh;
+  color: red;
+  text-align: center;
+  font-size: 2vh;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 4vh;
+  font-size: 2vh;
+}
