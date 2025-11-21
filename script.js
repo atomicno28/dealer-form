@@ -9,6 +9,37 @@ const errorMsg = document.getElementById("errorMsg");
 let images = [];
 
 /************************************
+ * IMAGE COMPRESSION FUNCTION
+ ************************************/
+async function compressImage(base64, maxWidth = 800, quality = 0.7) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.src = base64;
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      let width = img.width;
+      let height = img.height;
+
+      // Maintain ratio
+      if (width > maxWidth) {
+        height = (maxWidth / width) * height;
+        width = maxWidth;
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, width, height);
+
+      const compressed = canvas.toDataURL("image/jpeg", quality);
+      resolve(compressed);
+    };
+  });
+}
+
+/************************************
  * CAMERA BUTTON — DIRECT CAMERA OPEN
  ************************************/
 cameraBtn.onclick = () => {
@@ -44,17 +75,25 @@ dropZone.ondrop = (e) => {
   handleFiles(e.dataTransfer.files);
 };
 
+/************************************
+ * HANDLE FILES + COMPRESS
+ ************************************/
 function handleFiles(files) {
   [...files].forEach((file) => {
     const reader = new FileReader();
     reader.onload = (event) => {
-      images.push(event.target.result);
-      renderImages();
+      compressImage(event.target.result).then((compressed) => {
+        images.push(compressed);
+        renderImages();
+      });
     };
     reader.readAsDataURL(file);
   });
 }
 
+/************************************
+ * RENDER IMAGES WITH DELETE BUTTON
+ ************************************/
 function renderImages() {
   imageList.innerHTML = "";
 
@@ -87,22 +126,22 @@ function validate() {
   errorMsg.textContent = "";
 
   if (!dealerName.value.trim())
-    return (errorMsg.textContent = "Please add dealer name"), false;
+    return (errorMsg.textContent = "Please add dealer name", false);
 
   if (!partsName.value.trim())
-    return (errorMsg.textContent = "Please add parts name"), false;
+    return (errorMsg.textContent = "Please add parts name", false);
 
   if (!description.value.trim())
-    return (errorMsg.textContent = "Please add description"), false;
+    return (errorMsg.textContent = "Please add description", false);
 
   if (images.length === 0)
-    return (errorMsg.textContent = "Please upload at least 1 image"), false;
+    return (errorMsg.textContent = "Please upload at least 1 image", false);
 
   return true;
 }
 
 /************************************
- * PDF FILE NAME
+ * PDF FILE NAME FORMAT
  ************************************/
 function getPdfFileName() {
   const parts = partsName.value.trim() || "Report";
@@ -123,7 +162,7 @@ function getPdfFileName() {
 }
 
 /************************************
- * EXPORT PDF
+ * EXPORT PDF — Option-B Alignment + Compressed Images
  ************************************/
 generatePdfBtn.onclick = async () => {
   if (!validate()) return;
@@ -142,7 +181,7 @@ generatePdfBtn.onclick = async () => {
   pdf.setFont("Helvetica", "normal");
   pdf.text(new Date().toLocaleString("en-GB"), 40, 28);
 
-  // Option B alignment
+  // Option-B alignment
   pdf.setFont("Helvetica", "bold");
   pdf.text("Dealer:", 10, 40);
   pdf.setFont("Helvetica", "normal");
@@ -161,7 +200,9 @@ generatePdfBtn.onclick = async () => {
 
   let y = 60 + descLines.length * 6 + 10;
 
-  // Images 2 per row
+  /************************************
+   * ADD COMPRESSED IMAGES TO PDF (2 per row)
+   ************************************/
   let col = 0;
 
   for (let i = 0; i < images.length; i++) {
@@ -174,6 +215,7 @@ generatePdfBtn.onclick = async () => {
     pdf.addImage(images[i], "JPEG", x, y, 90, 70);
 
     if (col === 1) y += 80;
+
     col = 1 - col;
   }
 
